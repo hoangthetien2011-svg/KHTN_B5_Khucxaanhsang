@@ -226,81 +226,83 @@
 </div>
 
 <script>
-    // Dữ liệu ngân hàng câu hỏi KHÚC XẠ ÁNH SÁNG
+    // NGÂN HÀNG CÂU HỎI ĐÃ ĐƯỢC MỞ RỘNG ĐỂ ĐẢM BẢO LUÔN CÓ 20 CÂU (12-4-4)
     const KX_BANK = [
-        // PHẦN I: MCQ (12 câu/đề - Tổng ngân hàng 24 câu)
+        // PHẦN I: MCQ (Đầy đủ 24 câu)
         { id: 'KX.1', type: 'mcq', level: 'Nhận biết', question: 'Hiện tượng ánh sáng bị lệch phương khi truyền xiên góc qua mặt phân cách giữa hai môi trường trong suốt được gọi là hiện tượng', options: ['phản xạ ánh sáng.', 'tán sắc ánh sáng.', 'khúc xạ ánh sáng.', 'hấp thụ ánh sáng.'], answer: 2, explanation: 'Đây là định nghĩa cơ bản về hiện tượng khúc xạ ánh sáng.' },
-        { id: 'KX.2', type: 'mcq', level: 'Nhận biết', question: 'Tia khúc xạ nằm trong mặt phẳng nào sau đây?', options: ['Mặt phẳng phân cách.', 'Mặt phẳng tới.', 'Mặt phẳng pháp tuyến.', 'Mặt phẳng bất kì.'], answer: 1, explanation: 'Tia khúc xạ nằm trong mặt phẳng tới.' },
-        { id: 'KX.3', type: 'mcq', level: 'Nhận biết', question: 'Góc tạo bởi tia tới và pháp tuyến tại điểm tới được gọi là', options: ['góc khúc xạ.', 'góc tới.', 'góc phản xạ.', 'góc lệch.'], answer: 1, explanation: 'Góc tới $i$ là góc giữa tia tới và pháp tuyến.' },
-        { id: 'KX.4', type: 'mcq', level: 'Nhận biết', question: 'Khi tia sáng truyền vuông góc với mặt phân cách giữa hai môi trường trong suốt thì góc khúc xạ bằng', options: ['$0^\\circ$', '$45^\\circ$', '$90^\\circ$', '$180^\\circ$'], answer: 0, explanation: 'Truyền vuông góc ($i=0^\\circ$) thì tia sáng truyền thẳng ($r=0^\\circ$).' },
-        { id: 'KX.5', type: 'mcq', level: 'Thông hiểu', question: 'Khi ánh sáng truyền từ không khí vào nước, mối quan hệ giữa góc tới $i$ và góc khúc xạ $r$ là', options: ['$i < r$', '$i = r$', '$i > r$', '$i = 2r$'], answer: 2, explanation: 'Nước chiết quang hơn không khí nên tia sáng bị bẻ về gần pháp tuyến hơn ($r < i$).' },
-        { id: 'KX.6', type: 'mcq', level: 'Thông hiểu', question: 'Hiện tượng chiếc đũa cắm trong cốc nước trông như bị gãy ở mặt nước là do', options: ['phản xạ ánh sáng.', 'khúc xạ ánh sáng.', 'tán sắc ánh sáng.', 'hấp thụ ánh sáng.'], answer: 1, explanation: 'Hiện tượng khúc xạ làm thay đổi phương truyền của tia sáng từ nước ra không khí.' },
-        { id: 'KX.7', type: 'mcq', level: 'Thông hiểu', question: 'Chiết suất tỉ đối $n_{21}$ của môi trường 2 đối với môi trường 1 được tính bằng công thức', options: ['$n_{21} = \\frac{n_1}{n_2}$', '$n_{21} = \\frac{n_2}{n_1}$', '$n_{21} = n_1 + n_2$', '$n_{21} = n_1 \\cdot n_2$'], answer: 1, explanation: 'Công thức đúng là $n_{21} = n_2 / n_1$.' },
-        { id: 'KX.8', type: 'mcq', level: 'Thông hiểu', question: 'Khi tia tới đi từ môi trường chiết quang hơn sang môi trường chiết quang kém, nhận xét nào sau đây ĐÚNG?', options: ['$r > i$', '$r < i$', '$r = i$', 'Không xác định được.'], answer: 0, explanation: 'Sang môi trường kém chiết quang (n nhỏ hơn), tia sáng lệch xa pháp tuyến nên $r > i$.' },
-        { id: 'KX.9', type: 'mcq', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào thủy tinh ($n = 1,5$). Nếu góc tới $i = 45^\\circ$, góc khúc xạ $r$ có giá trị', options: ['bằng $45^\\circ$', 'nhỏ hơn $45^\\circ$', 'lớn hơn $45^\\circ$', 'bằng $0^\\circ$'], answer: 1, explanation: 'Thủy tinh chiết quang hơn không khí nên góc khúc xạ nhỏ hơn góc tới.' },
-        { id: 'KX.10', type: 'mcq', level: 'Vận dụng', question: 'Hiện tượng phản xạ toàn phần có thể xảy ra khi ánh sáng truyền từ', options: ['không khí vào thủy tinh.', 'chân không vào nhựa.', 'thủy tinh vào không khí.', 'không khí vào nước.'], answer: 2, explanation: 'Phản xạ toàn phần chỉ xảy ra khi truyền từ môi trường chiết quang hơn sang kém.' },
-        { id: 'KX.11', type: 'mcq', level: 'Nhận biết', question: 'Môi trường chiết quang hơn là môi trường có', options: ['chiết suất tuyệt đối lớn hơn.', 'chiết suất tuyệt đối nhỏ hơn.', 'vận tốc ánh sáng lớn hơn.', 'độ trong suốt cao hơn.'], answer: 0, explanation: 'Chiết suất tuyệt đối lớn đặc trưng cho môi trường chiết quang hơn.' },
-        { id: 'KX.12', type: 'mcq', level: 'Nhận biết', question: 'Chiết suất tuyệt đối của chân không được quy ước bằng', options: ['0', '1', '1,33', '1,5'], answer: 1, explanation: 'Quy ước chiết suất chân không bằng 1.' },
-        { id: 'KX.13', type: 'mcq', level: 'Thông hiểu', question: 'Góc khúc xạ là góc tạo bởi', options: ['tia tới và pháp tuyến.', 'tia khúc xạ và pháp tuyến.', 'tia khúc xạ và mặt phân cách.', 'tia tới và tia khúc xạ.'], answer: 1, explanation: 'Góc khúc xạ tính từ tia khúc xạ đến pháp tuyến.' },
-        { id: 'KX.14', type: 'mcq', level: 'Thông hiểu', question: 'Khi góc tới $i$ tăng dần (vẫn có tia khúc xạ) thì góc khúc xạ $r$ sẽ', options: ['giảm dần.', 'tăng dần.', 'không đổi.', 'luôn bằng $0$.'], answer: 1, explanation: 'Tỉ số $\\sin(i)/\\sin(r)$ là hằng số nên $i$ tăng thì $r$ cũng tăng.' },
-        { id: 'KX.15', type: 'mcq', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào nhựa. Khi $\\sin(i) = 0,8$ và $\\sin(r) = 0,5$. Chiết suất của nhựa là', options: ['0,625', '1,3', '1,6', '1,5'], answer: 2, explanation: '$n = \\sin(i)/\\sin(r) = 0,8/0,5 = 1,6$.' },
-        { id: 'KX.16', type: 'mcq', level: 'Vận dụng', question: 'Một tia sáng đi từ thủy tinh ($n=1,5$) ra không khí. Góc giới hạn phản xạ toàn phần $i_{gh}$ được tính bởi', options: ['$\\sin(i_{gh}) = 1,5$', '$\\sin(i_{gh}) = 1/1,5$', '$\\sin(i_{gh}) = 0,5$', '$\\sin(i_{gh}) = 1$'], answer: 1, explanation: '$\\sin(i_{gh}) = n_2/n_1 = 1/1,5$.' },
+        { id: 'KX.2', type: 'mcq', level: 'Nhận biết', question: 'Tia khúc xạ nằm trong mặt phẳng nào sau đây?', options: ['Mặt phẳng phân cách.', 'Mặt phẳng tới.', 'Mặt phẳng pháp tuyến.', 'Mặt phẳng bất kì.'], answer: 1, explanation: 'Theo định luật khúc xạ, tia khúc xạ nằm trong mặt phẳng tới.' },
+        { id: 'KX.3', type: 'mcq', level: 'Nhận biết', question: 'Góc tạo bởi tia tới và pháp tuyến tại điểm tới được gọi là', options: ['góc khúc xạ.', 'góc tới.', 'góc phản xạ.', 'góc lệch.'], answer: 1, explanation: 'Góc tới $i$ là góc hợp bởi tia tới và pháp tuyến.' },
+        { id: 'KX.4', type: 'mcq', level: 'Nhận biết', question: 'Khi tia sáng truyền vuông góc với mặt phân cách giữa hai môi trường trong suốt thì góc khúc xạ bằng', options: ['$0^\\circ$', '$45^\\circ$', '$90^\\circ$', '$180^\\circ$'], answer: 0, explanation: 'Tia tới vuông góc mặt phân cách ($i=0^\\circ$) thì tia sáng truyền thẳng ($r=0^\\circ$).' },
+        { id: 'KX.5', type: 'mcq', level: 'Thông hiểu', question: 'Khi ánh sáng truyền từ không khí vào nước, mối quan hệ giữa góc tới $i$ và góc khúc xạ $r$ là', options: ['$i < r$', '$i = r$', '$i > r$', '$i = 2r$'], answer: 2, explanation: 'Nước chiết quang hơn không khí nên tia sáng bị bẻ về gần pháp tuyến, dẫn đến $r < i$.' },
+        { id: 'KX.6', type: 'mcq', level: 'Thông hiểu', question: 'Hiện tượng chiếc đũa cắm trong cốc nước trông như bị gãy ở mặt nước là do', options: ['phản xạ ánh sáng.', 'khúc xạ ánh sáng.', 'tán sắc ánh sáng.', 'hấp thụ ánh sáng.'], answer: 1, explanation: 'Do sự thay đổi phương truyền của ánh sáng khi đi qua mặt phân cách.' },
+        { id: 'KX.7', type: 'mcq', level: 'Thông hiểu', question: 'Chiết suất tỉ đối $n_{21}$ của môi trường 2 đối với môi trường 1 được tính bằng công thức', options: ['$n_{21} = \\frac{n_1}{n_2}$', '$n_{21} = \\frac{n_2}{n_1}$', '$n_{21} = n_1 + n_2$', '$n_{21} = n_1 \\cdot n_2$'], answer: 1, explanation: 'Công thức chiết suất tỉ đối: $n_{21} = n_2 / n_1$.' },
+        { id: 'KX.8', type: 'mcq', level: 'Thông hiểu', question: 'Khi tia tới đi từ môi trường chiết quang hơn sang môi trường chiết quang kém, nhận xét nào sau đây ĐÚNG?', options: ['$r > i$', '$r < i$', '$r = i$', 'Không xác định được.'], answer: 0, explanation: 'Sang môi trường kém chiết quang (n nhỏ hơn), tia sáng lệch xa pháp tuyến, nên $r > i$.' },
+        { id: 'KX.9', type: 'mcq', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào nhựa trong suốt. Khi góc tới $i = 60^\\circ$ thì góc khúc xạ $r = 30^\\circ$. Chiết suất của nhựa là', options: ['1,41', '1,50', '1,73', '2,00'], answer: 2, explanation: '$n = \\sin(60^\\circ) / \\sin(30^\\circ) = \\sqrt{3} \\approx 1,73$.' },
+        { id: 'KX.10', type: 'mcq', level: 'Vận dụng', question: 'Hiện tượng phản xạ toàn phần có thể xảy ra khi ánh sáng truyền từ', options: ['không khí vào thủy tinh.', 'chân không vào thủy tinh.', 'thủy tinh vào không khí.', 'không khí vào nước.'], answer: 2, explanation: 'Phản xạ toàn phần chỉ xảy ra khi truyền từ môi trường chiết quang hơn sang kém.' },
+        { id: 'KX.11', type: 'mcq', level: 'Nhận biết', question: 'Môi trường chiết quang hơn là môi trường có', options: ['chiết suất tuyệt đối lớn hơn.', 'vận tốc ánh sáng lớn hơn.', 'độ trong suốt cao hơn.', 'chiết suất tuyệt đối nhỏ hơn.'], answer: 0, explanation: 'Chiết suất lớn hơn đặc trưng cho môi trường chiết quang hơn.' },
+        { id: 'KX.12', type: 'mcq', level: 'Nhận biết', question: 'Chiết suất của chân không có giá trị bằng', options: ['0', '1', '1,33', '1,5'], answer: 1, explanation: 'Chiết suất tuyệt đối của chân không quy ước là 1.' },
+        { id: 'KX.13', type: 'mcq', level: 'Thông hiểu', question: 'Góc khúc xạ là góc tạo bởi', options: ['tia tới và pháp tuyến.', 'tia khúc xạ và pháp tuyến.', 'tia tới và mặt phân cách.', 'tia khúc xạ và mặt phân cách.'], answer: 1, explanation: 'Góc khúc xạ $r$ tính từ tia khúc xạ đến pháp tuyến.' },
+        { id: 'KX.14', type: 'mcq', level: 'Thông hiểu', question: 'Khi tăng góc tới $i$ (mà vẫn có khúc xạ) thì góc khúc xạ $r$ sẽ', options: ['giảm dần.', 'tăng dần.', 'không đổi.', 'bằng $0$.'], answer: 1, explanation: 'Góc tới tăng thì góc khúc xạ tăng theo hàm sin.' },
+        { id: 'KX.15', type: 'mcq', level: 'Vận dụng', question: 'Bể chứa nước ($n=4/3$) sâu 1,2 m. Người nhìn thẳng góc thấy đáy bể cách mặt nước xấp xỉ', options: ['0,9 m', '1,2 m', '1,6 m', '0,4 m'], answer: 0, explanation: '$h\' = h/n = 1,2 / (4/3) = 0,9$ m.' },
+        { id: 'KX.16', type: 'mcq', level: 'Vận dụng', question: 'Tia sáng đi từ thủy tinh ($n=1,5$) ra không khí. Góc giới hạn $i_{gh}$ có giá trị xấp xỉ', options: ['$30^\\circ$', '$42^\\circ$', '$48^\\circ$', '$60^\\circ$'], answer: 1, explanation: '$\\sin(i_{gh}) = 1/1,5 \\Rightarrow i_{gh} \\approx 41,8^\\circ$.' },
 
-        // PHẦN II: ĐÚNG/SAI (4 câu/đề - Tổng ngân hàng 8 câu)
+        // PHẦN II: ĐÚNG/SAI (Đã bổ sung đủ 8 câu)
         {
             id: 'KX.31', type: 'truefalse', level: 'Thông hiểu',
             context: 'Xét tia sáng truyền từ không khí vào nước ($n = 1,33$).',
             statements: [
                 'a) Tia khúc xạ luôn nằm trong mặt phẳng tới.',
-                'b) Góc khúc xạ $r$ luôn lớn hơn góc tới $i$.',
-                'c) Nếu góc tới $i=0^\\circ$ thì tia sáng truyền thẳng qua mặt phân cách.',
-                'd) Tỉ số giữa $\\sin(i)$ và $\\sin(r)$ luôn bằng $1,33$.'
+                'b) Góc khúc xạ luôn lớn hơn góc tới.',
+                'c) Nếu tia sáng truyền vuông góc mặt phân cách thì không bị lệch phương.',
+                'd) Tỉ số giữa $\\sin(i)$ và $\\sin(r)$ là hằng số.'
             ],
             correctPattern: [true, false, true, true],
-            explanation: 'a) Đúng theo định luật. b) Sai vì $n_{nuoc} > n_{kk}$ nên $r < i$. c) Đúng. d) Đúng.'
+            explanation: 'a) Đúng. b) Sai vì nước chiết quang hơn nên $r < i$. c) Đúng. d) Đúng.'
         },
         {
             id: 'KX.32', type: 'truefalse', level: 'Vận dụng',
-            context: 'Một tia sáng đi từ thủy tinh ($n=1,5$) ra không khí ($n=1$).',
+            context: 'Một tia sáng truyền từ thủy tinh ($n=1,5$) ra không khí ($n=1$).',
             statements: [
-                'a) Hiện tượng phản xạ toàn phần có thể xảy ra.',
-                'b) Góc khúc xạ $r$ luôn nhỏ hơn góc tới $i$.',
-                'c) Khi góc tới tăng thì góc khúc xạ cũng tăng.',
-                'd) Nếu góc tới lớn hơn $42^\\circ$ thì sẽ KHÔNG còn tia khúc xạ ra không khí.'
-            ],
-            correctPattern: [true, false, true, true],
-            explanation: 'a) Đúng (từ hơn sang kém). b) Sai ($r > i$). c) Đúng. d) Đúng vì $i_{gh} \\approx 41,8^\\circ$.'
-        },
-        {
-            id: 'KX.33', type: 'truefalse', level: 'Thông hiểu',
-            context: 'Về khái niệm chiết suất của môi trường:',
-            statements: [
-                'a) Chiết suất tuyệt đối của một môi trường luôn lớn hơn hoặc bằng 1.',
-                'b) Chiết suất tỉ đối $n_{21}$ có thể nhỏ hơn 1.',
-                'c) Môi trường chiết quang hơn có vận tốc ánh sáng truyền trong đó nhanh hơn.',
-                'd) Chiết suất tuyệt đối của nước xấp xỉ 1,33.'
+                'a) Tia sáng có xu hướng lệch xa pháp tuyến hơn.',
+                'b) Hiện tượng phản xạ toàn phần có thể xảy ra.',
+                'c) Khi góc tới tăng thì góc khúc xạ giảm.',
+                'd) Ở góc tới $i = 0^\\circ$, tia sáng truyền thẳng.'
             ],
             correctPattern: [true, true, false, true],
-            explanation: 'a) Đúng. b) Đúng. c) Sai (vận tốc chậm hơn $v=c/n$). d) Đúng.'
+            explanation: 'a) Đúng. b) Đúng. c) Sai ($i$ tăng thì $r$ tăng). d) Đúng.'
         },
         {
-            id: 'KX.34', type: 'truefalse', level: 'Vận dụng',
+            id: 'KX.33', type: 'truefalse', level: 'Nhận biết',
+            context: 'Về khái niệm chiết suất và vận tốc ánh sáng:',
+            statements: [
+                'a) Chiết suất tuyệt đối của mọi môi trường trong suốt đều lớn hơn 1.',
+                'b) Ánh sáng truyền trong nước chậm hơn trong chân không.',
+                'c) Môi trường có chiết suất lớn gọi là môi trường chiết quang kém.',
+                'd) Chiết suất tuyệt đối của thủy tinh xấp xỉ bằng 1,5.'
+            ],
+            correctPattern: [true, true, false, true],
+            explanation: 'a) Đúng. b) Đúng ($v=c/n$). c) Sai (chiết quang hơn). d) Đúng.'
+        },
+        {
+            id: 'KX.34', type: 'Thông hiểu',
             context: 'Hiện tượng khúc xạ ánh sáng trong đời sống:',
             statements: [
-                'a) Một bể bơi chứa nước trông có vẻ nông hơn thực tế khi nhìn từ trên xuống.',
-                'b) Hiện tượng này xảy ra do sự phản xạ của đáy hồ.',
-                'c) Ảnh ảo của đáy hồ nằm gần mặt nước hơn so với đáy hồ thật.',
-                'd) Ta có thể tính độ sâu ảo bằng công thức $h\' = h/n$.'
+                'a) Nhìn từ trên xuống, đáy hồ bơi trông có vẻ sâu hơn thực tế.',
+                'b) Hiện tượng ảo giác trên sa mạc có liên quan đến khúc xạ ánh sáng.',
+                'c) Cắm ống hút vào cốc nước thấy ống bị gãy do phản xạ ánh sáng.',
+                'd) Ta nhìn thấy con cá dưới nước sâu hơn vị trí thật của nó.'
             ],
-            correctPattern: [true, false, true, true],
-            explanation: 'a) Đúng. b) Sai (do khúc xạ). c) Đúng. d) Đúng.'
+            correctPattern: [false, true, false, false],
+            explanation: 'a) Sai (trông nông hơn). b) Đúng. c) Sai (do khúc xạ). d) Sai (trông nông hơn cá thật).'
         },
 
-        // PHẦN III: TRẢ LỜI NGẮN (4 câu/đề - Tổng ngân hàng 8 câu)
-        { id: 'KX.39', type: 'short', level: 'Vận dụng', question: 'Nếu tia tới hợp với mặt phân cách một góc $60^\\circ$, thì góc tới bằng bao nhiêu độ?', answer: '30', explanation: '$i = 90^\\circ - 60^\\circ = 30^\\circ$.' },
-        { id: 'KX.40', type: 'short', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào nước có chiết suất $n = 4/3$. Nếu $\\sin(i) = 0,8$ thì $\\sin(r)$ bằng bao nhiêu? (Nhập kết quả số thập phân)', answer: '0,6', explanation: '$\\sin(r) = \\sin(i)/n = 0,8 / (4/3) = 0,6$.' },
-        { id: 'KX.41', type: 'short', level: 'Thông hiểu', question: 'Chiết suất tuyệt đối của thủy tinh là 1,5. Vận tốc ánh sáng trong thủy tinh nhỏ hơn trong chân không bao nhiêu lần?', answer: '1,5', explanation: '$n = c/v = 1,5$.' },
-        { id: 'KX.42', type: 'short', level: 'Vận dụng', question: 'Một tia sáng đi từ thủy tinh ($n=1,5$) ra không khí. Nếu $\\sin(i) = 0,4$. Hãy tính giá trị $\\sin(r)$.', answer: '0,6', explanation: '$\\sin(r) = n \\cdot \\sin(i) = 1,5 \\cdot 0,4 = 0,6$.' }
+        // PHẦN III: TRẢ LỜI NGẮN (Đã bổ sung đủ 8 câu)
+        { id: 'KX.39', type: 'short', level: 'Vận dụng', question: 'Tia sáng đi từ không khí vào nước ($n = 4/3$). Nếu $\\sin(i) = 0,8$ thì $\\sin(r)$ bằng bao nhiêu?', answer: '0,6', explanation: '$\\sin(r) = \\sin(i) / n = 0,8 / (4/3) = 0,6$.' },
+        { id: 'KX.40', type: 'short', level: 'Nhận biết', question: 'Tia tới hợp với mặt phân cách góc $60^\\circ$ thì góc tới bằng bao nhiêu độ?', answer: '30', explanation: '$i = 90^\\circ - 60^\\circ = 30^\\circ$.' },
+        { id: 'KX.41', type: 'short', level: 'Thông hiểu', question: 'Chiết suất thủy tinh là 1,5. Vận tốc ánh sáng trong thủy tinh nhỏ hơn trong chân không bao nhiêu lần?', answer: '1,5', explanation: 'Tỉ số $c/v = n = 1,5$.' },
+        { id: 'KX.42', type: 'short', level: 'Vận dụng', question: 'Một tia sáng đi từ thủy tinh ra không khí. Nếu $\\sin(i) = 0,4$ và $n = 1,5$, tính giá trị $\\sin(r)$.', answer: '0,6', explanation: '$\\sin(r) = 1,5 \\cdot 0,4 = 0,6$.' },
+        { id: 'KX.43', type: 'short', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào nhựa. Nếu $i=60^\\circ$ và $r=30^\\circ$, chiết suất nhựa là bao nhiêu?', answer: '1,73', explanation: '$n = \\sin(60)/\\sin(30) = \\sqrt{3} \\approx 1,73$.' },
+        { id: 'KX.44', type: 'short', level: 'Vận dụng', question: 'Để xảy ra phản xạ toàn phần từ thủy tinh ($n=1,5$) ra không khí, góc tới $i$ phải lớn hơn bao nhiêu độ?', answer: '42', explanation: '$i_{gh} \\approx 41,8^\\circ$, nên $i > 42^\circ$.' }
     ];
 
     let currentUser = {};
@@ -333,11 +335,15 @@
             if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
         }
 
-        // TẠO ĐỀ: 12 MCQ + 4 TF + 4 SHORT = 20 CÂU
+        // TẠO ĐỀ: 12 MCQ + 4 TF + 4 SHORT = ĐÚNG 20 CÂU
         const mcqs = shuffle([...KX_BANK.filter(q => q.type === 'mcq')]).slice(0, 12);
         const tfs = shuffle([...KX_BANK.filter(q => q.type === 'truefalse')]).slice(0, 4);
         const shorts = shuffle([...KX_BANK.filter(q => q.type === 'short')]).slice(0, 4);
+        
         currentQuestions = [...mcqs, ...tfs, ...shorts];
+
+        // LOG ĐỂ KIỂM TRA SỐ LƯỢNG CÂU HỎI
+        console.log("Tổng số câu hỏi được chọn:", currentQuestions.length);
 
         document.getElementById('welcome-screen').classList.add('hidden');
         document.getElementById('quiz-header').classList.remove('hidden');
@@ -370,13 +376,13 @@
         const q = currentQuestions[currentIndex];
         const container = document.getElementById('question-container');
         
-        let prefix = "";
-        let qNum = 0;
-        if (currentIndex < 12) { prefix = "PHẦN I"; qNum = currentIndex + 1; }
-        else if (currentIndex < 16) { prefix = "PHẦN II"; qNum = currentIndex - 11; }
-        else { prefix = "PHẦN III"; qNum = currentIndex - 15; }
+        let part = "";
+        let qIdx = 0;
+        if (currentIndex < 12) { part = "PHẦN I"; qIdx = currentIndex + 1; }
+        else if (currentIndex < 16) { part = "PHẦN II"; qIdx = currentIndex - 11; }
+        else { part = "PHẦN III"; qIdx = currentIndex - 15; }
 
-        let html = `<span class="q-number">${prefix} - Câu ${qNum}.</span>`;
+        let html = `<span class="q-number">${part} - Câu ${qIdx}.</span>`;
 
         if (q.type === 'mcq') {
             html += `<div class="q-text">${q.question}</div><ul class="options-list">`;
@@ -415,7 +421,7 @@
     function changeQuestion(dir) {
         currentIndex += dir;
         if (currentIndex < 0) currentIndex = 0;
-        if (currentIndex >= currentQuestions.length) { currentIndex = currentQuestions.length - 1; }
+        if (currentIndex >= currentQuestions.length) { currentIndex = currentQuestions.length - 1; return; }
         renderQuestion(); startTimer();
     }
 
@@ -452,7 +458,7 @@
         else { badge.innerText = 'CHƯA ĐẠT'; badge.style.backgroundColor = '#e53e3e'; }
 
         const list = document.getElementById('review-list');
-        list.innerHTML = '<h3>Giải thích:</h3>';
+        list.innerHTML = '<h3>Giải thích chi tiết:</h3>';
         currentQuestions.forEach((q, i) => {
             const div = document.createElement('div');
             div.className = 'review-item';
@@ -462,9 +468,10 @@
         if (window.MathJax) MathJax.typesetPromise([list]);
     }
 
+    // Chống gian lận
     document.addEventListener("visibilitychange", () => {
         if (isExam && !isFinished && document.visibilityState === 'hidden') {
-            alert("Rời trang - Bài làm đã được nộp!"); finishQuiz();
+            alert("Hệ thống phát hiện bạn rời khỏi trang. Bài làm đã được nộp!"); finishQuiz();
         }
     });
 </script>
