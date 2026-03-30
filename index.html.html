@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc nghiệm KHTN 9 - Khúc xạ ánh sáng</title>
+    <!-- Cấu hình MathJax chuẩn -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                enableMenu: false
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --light-blue: #ebf8ff;
+            --white: #ffffff;
+            --error: #e53e3e;
+            --success: #38a169;
+            --text-dark: #2d3748;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        .hidden { display: none !important; }
+
+        #app {
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            background: var(--white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        header {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        #welcome-screen {
+            padding: 40px 20px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .main-title {
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .btn-container { display: flex; gap: 15px; margin-top: 30px; }
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+        .btn-practice { background-color: var(--secondary-color); }
+        .btn-exam { background-color: var(--error); }
+
+        #quiz-screen { flex-grow: 1; padding: 20px; display: flex; flex-direction: column; }
+        .q-number { font-weight: 800; color: var(--secondary-color); margin-bottom: 10px; display: block; }
+        .q-text { font-size: 19px; line-height: 1.5; margin-bottom: 20px; }
+
+        .options-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+        .option-item {
+            padding: 15px;
+            border: 2px solid #edf2f7;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #fff;
+            transition: 0.2s;
+        }
+        .option-item.selected { border-color: var(--secondary-color); background: var(--light-blue); font-weight: 600; }
+
+        .tf-container { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .tf-row { border-bottom: 1px solid #edf2f7; }
+        .tf-statement { padding: 12px 0; font-size: 16px; }
+        .tf-actions { display: flex; gap: 5px; padding: 10px 0; justify-content: flex-end; }
+        .btn-tf {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            min-width: 65px;
+        }
+        .btn-tf.active-true { background: var(--success); color: white; border-color: var(--success); }
+        .btn-tf.active-false { background: var(--error); color: white; border-color: var(--error); }
+
+        .short-answer-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .nav-footer {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            gap: 10px;
+        }
+        .btn-nav { padding: 12px 20px; border: none; border-radius: 8px; background: var(--primary-color); color: white; font-weight: 600; cursor: pointer; flex: 1; }
+        .btn-nav:disabled { background: #cbd5e0; cursor: not-allowed; }
+
+        #result-screen { padding: 30px 20px; text-align: center; }
+        .score-box { font-size: 50px; font-weight: 900; color: var(--primary-color); margin: 20px 0; }
+        .rank-badge { display: inline-block; padding: 6px 20px; border-radius: 20px; color: white; font-weight: 800; margin-bottom: 20px; }
+        
+        .review-item { text-align: left; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        .explanation { background: #f0fff4; padding: 12px; border-left: 4px solid var(--success); margin-top: 10px; font-size: 14px; color: #276749; }
+
+        .copyright { padding: 15px; text-align: center; font-size: 12px; color: #a0aec0; background: #f8fafc; }
+        .warning-text { color: var(--error); font-weight: 800; margin-top: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <header id="quiz-header" class="hidden">
+        <div class="header-info">
+            <span id="header-user"></span>
+            <span id="timer-display" style="font-family: monospace; font-size: 1.2rem;">00:00</span>
+        </div>
+    </header>
+
+    <div id="welcome-screen">
+        <div class="main-title">Khúc xạ ánh sáng<br><span style="font-size: 16px;">KHTN 9</span></div>
+        <div class="input-group"><label>Số báo danh</label><input type="text" id="sbd"></div>
+        <div class="input-group"><label>Họ và tên</label><input type="text" id="fullname"></div>
+        <div class="input-group"><label>Lớp</label><input type="text" id="class-name"></div>
+        <div class="input-group"><label>Trường</label><input type="text" id="school-name"></div>
+
+        <div class="btn-container">
+            <button class="btn btn-practice" onclick="startApp('practice')">Luyện tập</button>
+            <button class="btn btn-exam" onclick="startApp('exam')">Kiểm tra</button>
+        </div>
+        <div id="exam-warning" class="warning-text hidden">Cảnh báo: Nếu bạn rời khỏi trang, hệ thống sẽ TỰ ĐỘNG NỘP BÀI!</div>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div id="question-container"></div>
+    </div>
+
+    <div id="quiz-nav" class="nav-footer hidden">
+        <button class="btn-nav" id="prev-btn" onclick="changeQuestion(-1)">Quay lại</button>
+        <button class="btn-nav" id="next-btn" onclick="changeQuestion(1)">Câu tiếp</button>
+        <button class="btn-nav" id="submit-btn" style="background-color: var(--success);" onclick="confirmSubmit()">Nộp bài</button>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <h2 id="result-greeting"></h2>
+        <div class="score-box" id="result-score">0/7</div>
+        <div class="rank-badge" id="result-rank"></div>
+        <div id="review-list"></div>
+        <button class="btn btn-practice" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Làm lại</button>
+    </div>
+
+    <div class="copyright">Bản quyền thuộc về Trường THCS Thuỷ Phương, Thành phố Huế</div>
+</div>
+
+<script>
+    // Dữ liệu câu hỏi với LaTeX đã được thoát (double backslash)
+    const KX_BANK = [
+        // MCQ (24 câu)
+        { id: 'KX.1', type: 'mcq', level: 'Nhận biết', question: 'Hiện tượng ánh sáng bị lệch phương khi truyền xiên góc qua mặt phân cách giữa hai môi trường trong suốt được gọi là hiện tượng', options: ['phản xạ ánh sáng.', 'tán sắc ánh sáng.', 'khúc xạ ánh sáng.', 'hấp thụ ánh sáng.'], answer: 2, explanation: 'Đây là định nghĩa cơ bản về hiện tượng khúc xạ ánh sáng.' },
+        { id: 'KX.2', type: 'mcq', level: 'Nhận biết', question: 'Tia khúc xạ nằm trong mặt phẳng nào sau đây?', options: ['Mặt phẳng phân cách.', 'Mặt phẳng tới.', 'Mặt phẳng pháp tuyến.', 'Mặt phẳng bất kì.'], answer: 1, explanation: 'Theo định luật khúc xạ, tia khúc xạ nằm trong mặt phẳng tới.' },
+        { id: 'KX.3', type: 'mcq', level: 'Nhận biết', question: 'Góc tạo bởi tia tới và pháp tuyến tại điểm tới được gọi là', options: ['góc khúc xạ.', 'góc tới.', 'góc phản xạ.', 'góc lệch.'], answer: 1, explanation: 'Góc tới $i$ là góc giữa tia tới và pháp tuyến tại điểm tới.' },
+        { id: 'KX.4', type: 'mcq', level: 'Nhận biết', question: 'Khi tia sáng truyền vuông góc với mặt phân cách giữa hai môi trường trong suốt thì góc khúc xạ bằng', options: ['$0^\\circ$', '$45^\\circ$', '$90^\\circ$', '$180^\\circ$'], answer: 0, explanation: 'Truyền vuông góc ($i=0^\\circ$) thì tia sáng truyền thẳng ($r=0^\\circ$).' },
+        { id: 'KX.5', type: 'mcq', level: 'Thông hiểu', question: 'Khi ánh sáng truyền từ không khí vào nước, mối quan hệ giữa góc tới $i$ và góc khúc xạ $r$ là', options: ['$i < r$', '$i = r$', '$i > r$', '$i = 2r$'], answer: 2, explanation: 'Nước chiết quang hơn không khí nên $r < i$.' },
+        { id: 'KX.6', type: 'mcq', level: 'Thông hiểu', question: 'Hiện tượng chiếc ống hút cắm trong ly nước trông như bị gãy ở mặt nước là do', options: ['phản xạ ánh sáng.', 'khúc xạ ánh sáng.', 'tán sắc ánh sáng.', 'hấp thụ ánh sáng.'], answer: 1, explanation: 'Do hiện tượng khúc xạ ánh sáng tại mặt phân cách.' },
+        { id: 'KX.7', type: 'mcq', level: 'Thông hiểu', question: 'Chiết suất tỉ đối $n_{21}$ của môi trường 2 đối với môi trường 1 được tính bằng công thức', options: ['$n_{21} = \\frac{n_1}{n_2}$', '$n_{21} = \\frac{n_2}{n_1}$', '$n_{21} = n_1 + n_2$', '$n_{21} = n_1 \\cdot n_2$'], answer: 1, explanation: 'Công thức chiết suất tỉ đối: $n_{21} = n_2 / n_1$.' },
+        { id: 'KX.8', type: 'mcq', level: 'Thông hiểu', question: 'Khi tia tới đi từ môi trường chiết quang hơn sang môi trường chiết quang kém, nhận xét nào sau đây ĐÚNG?', options: ['$r > i$', '$r < i$', '$r = i$', 'Không xác định được.'], answer: 0, explanation: 'Sang môi trường kém chiết quang hơn, tia sáng lệch xa pháp tuyến, nên $r > i$.' },
+        { id: 'KX.9', type: 'mcq', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào khối nhựa trong suốt. Khi góc tới $i = 60^\\circ$ thì góc khúc xạ $r = 30^\\circ$. Chiết suất của nhựa là', options: ['1,41', '1,50', '1,73', '2,00'], answer: 2, explanation: '$n = \\sin(60^\\circ) / \\sin(30^\\circ) = \\sqrt{3} \\approx 1,73$.' },
+        { id: 'KX.10', type: 'mcq', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào thủy tinh ($n = 1,5$). Nếu góc tới $i = 45^\\circ$, góc khúc xạ $r$ sẽ có giá trị', options: ['bằng $45^\\circ$', 'nhỏ hơn $45^\\circ$', 'lớn hơn $45^\\circ$', 'bằng $0^\\circ$'], answer: 1, explanation: 'Vì thủy tinh chiết quang hơn không khí nên $r < i$.' },
+        { id: 'KX.11', type: 'mcq', level: 'Nhận biết', question: 'Chiết suất của chân không có giá trị bằng', options: ['0', '1', '1,33', '1,5'], answer: 1, explanation: 'Chiết suất tuyệt đối của chân không được quy ước là 1.' },
+        { id: 'KX.12', type: 'mcq', level: 'Nhận biết', question: 'Pháp tuyến là đường thẳng', options: ['song song mặt phân cách.', 'vuông góc mặt phân cách tại điểm tới.', 'hợp mặt phân cách góc $45^\\circ$.', 'trùng với tia tới.'], answer: 1, explanation: 'Pháp tuyến luôn vuông góc với mặt phân cách tại điểm tới.' },
+        { id: 'KX.13', type: 'mcq', level: 'Thông hiểu', question: 'Môi trường chiết quang hơn là môi trường có', options: ['chiết suất lớn hơn.', 'vận tốc ánh sáng lớn hơn.', 'độ trong suốt cao hơn.', 'chiết suất nhỏ hơn.'], answer: 0, explanation: 'Chiết suất càng lớn thì môi trường càng chiết quang hơn.' },
+        { id: 'KX.14', type: 'mcq', level: 'Thông hiểu', question: 'Khi tăng góc tới $i$ thì góc khúc xạ $r$ sẽ', options: ['giảm đi.', 'tăng lên.', 'không đổi.', 'luôn bằng $0$.'], answer: 1, explanation: 'Góc tới tăng thì góc khúc xạ cũng tăng (nhưng không tỉ lệ thuận).' },
+        { id: 'KX.15', type: 'mcq', level: 'Vận dụng', question: 'Một cái bể chứa nước ($n=4/3$) sâu 1,2 m. Một người nhìn xuống đáy bể thấy đáy cách mặt nước một khoảng xấp xỉ', options: ['0,9 m', '1,2 m', '1,6 m', '0,4 m'], answer: 0, explanation: 'Ảnh ảo của đáy bể cách mặt nước $h\' = h / n = 1,2 / (4/3) = 0,9$ m.' },
+        { id: 'KX.16', type: 'mcq', level: 'Nhận biết', question: 'Góc khúc xạ $r$ là góc hợp bởi', options: ['tia tới và pháp tuyến.', 'tia khúc xạ và pháp tuyến.', 'tia khúc xạ và mặt phân cách.', 'tia tới và tia khúc xạ.'], answer: 1, explanation: 'Góc khúc xạ là góc giữa tia khúc xạ và pháp tuyến.' },
+        { id: 'KX.17', type: 'mcq', level: 'Thông hiểu', question: 'Hiện tượng phản xạ toàn phần có thể xảy ra khi truyền ánh sáng từ', options: ['không khí vào nước.', 'nước vào không khí.', 'chân không vào nhựa.', 'không khí vào thủy tinh.'], answer: 1, explanation: 'Phản xạ toàn phần xảy ra khi truyền từ môi trường chiết quang hơn sang môi trường kém chiết quang.' },
+        { id: 'KX.18', type: 'mcq', level: 'Thông hiểu', question: 'Nếu chiết suất tỉ đối $n_{21} > 1$ thì môi trường 2', options: ['kém chiết quang hơn môi trường 1.', 'chiết quang hơn môi trường 1.', 'có vận tốc ánh sáng lớn hơn.', 'luôn cho góc $r > i$.'], answer: 1, explanation: '$n_{21} > 1 \\Rightarrow n_2 > n_1$, vậy môi trường 2 chiết quang hơn.' },
+        { id: 'KX.19', type: 'mcq', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào nhựa. Khi $\\sin(i) = 0,8$ và $\\sin(r) = 0,5$. Chiết suất của nhựa là', options: ['0,625', '1,3', '1,6', '1,5'], answer: 2, explanation: '$n = \\sin(i) / \\sin(r) = 0,8 / 0,5 = 1,6$.' },
+        { id: 'KX.20', type: 'mcq', level: 'Nhận biết', question: 'Mặt phẳng tới chứa', options: ['tia tới và tia khúc xạ.', 'tia tới và pháp tuyến.', 'tia khúc xạ và pháp tuyến.', 'mặt phân cách.'], answer: 1, explanation: 'Mặt phẳng tới được xác định bởi tia tới và pháp tuyến.' },
+        { id: 'KX.21', type: 'mcq', level: 'Thông hiểu', question: 'Trong hiện tượng khúc xạ, tia tới và tia khúc xạ nằm', options: ['cùng phía pháp tuyến.', 'đối xứng qua mặt phân cách.', 'ở hai phía đối diện pháp tuyến.', 'trên cùng một đường thẳng.'], answer: 2, explanation: 'Tia tới và tia khúc xạ nằm ở hai phía của pháp tuyến.' },
+        { id: 'KX.22', type: 'mcq', level: 'Vận dụng', question: 'Một tia sáng đi từ thủy tinh ($n=1,5$) ra không khí. Góc giới hạn phản xạ toàn phần xấp xỉ bằng', options: ['$30^\\circ$', '$42^\\circ$', '$48^\\circ$', '$60^\\circ$'], answer: 1, explanation: '$\\sin(i_{gh}) = 1 / 1,5 \\Rightarrow i_{gh} \\approx 41,8^\\circ \\approx 42^\\circ$.' },
+        { id: 'KX.23', type: 'mcq', level: 'Thông hiểu', question: 'Kết luận nào sau đây ĐÚNG về chiết suất tuyệt đối?', options: ['Có thể nhỏ hơn 1.', 'Luôn lớn hơn hoặc bằng 1.', 'Luôn bằng 1,33.', 'Phụ thuộc vào góc tới.'], answer: 1, explanation: 'Chiết suất tuyệt đối luôn $\\ge 1$.' },
+        { id: 'KX.24', type: 'mcq', level: 'Vận dụng', question: 'Tia sáng truyền từ nước ra không khí. Nếu góc tới $i = 30^\\circ$, góc khúc xạ $r$ có thể là', options: ['$22^\\circ$', '$30^\\circ$', '$42^\\circ$', '$0^\\circ$'], answer: 2, explanation: 'Từ nước ra không khí (kém chiết quang hơn) nên $r > i = 30^\\circ$.' },
+
+        // True/False (8 câu)
+        {
+            id: 'KX.31', type: 'truefalse', level: 'Thông hiểu',
+            context: 'Xét tia sáng truyền từ không khí vào nước có chiết suất $n = 1,33$.',
+            statements: [
+                'a) Tia khúc xạ luôn lệch về gần pháp tuyến hơn so với tia tới.',
+                'b) Nếu góc tới $i = 0^\\circ$ thì tia sáng truyền thẳng qua mặt phân cách.',
+                'c) Góc tới $i$ càng lớn thì góc khúc xạ $r$ càng nhỏ.',
+                'd) Tỉ số giữa $\\sin(i)$ và $\\sin(r)$ luôn không đổi và bằng 1,33.'
+            ],
+            correctPattern: [true, true, false, true],
+            explanation: 'a) Đúng vì nước chiết quang hơn. b) Đúng. c) Sai, i tăng thì r tăng. d) Đúng.'
+        },
+        {
+            id: 'KX.32', type: 'truefalse', level: 'Vận dụng',
+            context: 'Dữ liệu đo đạc khúc xạ từ không khí vào thủy tinh: $i = 30^\\circ \\Rightarrow r = 19,5^\\circ$.',
+            statements: [
+                'a) Chiết suất tuyệt đối của khối thủy tinh này xấp xỉ 1,5.',
+                'b) Tia khúc xạ nằm trong mặt phẳng tới.',
+                'c) Vận tốc ánh sáng trong thủy tinh lớn hơn trong không khí.',
+                'd) Nếu góc tới $i = 0^\\circ$ thì không xảy ra hiện tượng khúc xạ.'
+            ],
+            correctPattern: [true, true, false, true],
+            explanation: 'a) $n = \\sin(30^\\circ)/\\sin(19,5^\\circ) \\approx 0,5/0,33 = 1,5$. b) Đúng. c) Sai, v tỉ lệ nghịch với n. d) Đúng.'
+        },
+
+        // Short Answer (8 câu)
+        { id: 'KX.39', type: 'short', level: 'Vận dụng', question: 'Tia sáng truyền từ không khí vào nước ($n = 4/3$). Nếu $\\sin(i) = 0,8$ thì $\\sin(r)$ bằng bao nhiêu?', answer: '0,6', explanation: '$\\sin(r) = \\sin(i) / n = 0,8 / (4/3) = 0,6$.' },
+        { id: 'KX.40', type: 'short', level: 'Vận dụng', question: 'Nếu tia tới hợp với mặt phân cách một góc $60^\\circ$, thì góc tới bằng bao nhiêu độ?', answer: '30', explanation: '$i = 90^\\circ - 60^\\circ = 30^\\circ$.' },
+        { id: 'KX.41', type: 'short', level: 'Vận dụng', question: 'Một tia sáng truyền từ môi trường 1 sang môi trường 2 có chiết suất tỉ đối $n_{21} = 1,5$. Biết $\\sin(r) = 0,4$. Tính $\\sin(i)$.', answer: '0,6', explanation: '$\\sin(i) = n_{21} \\cdot \\sin(r) = 1,5 \\cdot 0,4 = 0,6$.' },
+        { id: 'KX.42', type: 'short', level: 'Thông hiểu', question: 'Chiết suất tuyệt đối của thủy tinh là 1,5. Vận tốc ánh sáng trong thủy tinh nhỏ hơn trong chân không bao nhiêu lần?', answer: '1,5', explanation: '$n = c/v = 1,5$.' }
+    ];
+
+    let currentUser = {};
+    let currentQuestions = [];
+    let userAnswers = {};
+    let currentIndex = 0;
+    let timerInterval;
+    let timeLeft = 0;
+    let isExam = false;
+    let isFinished = false;
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startApp(mode) {
+        const sbd = document.getElementById('sbd').value.trim();
+        const name = document.getElementById('fullname').value.trim();
+        if (!sbd || !name) { alert('Bạn cần nhập SBD và Họ tên!'); return; }
+
+        currentUser = { sbd, name, class: document.getElementById('class-name').value, school: document.getElementById('school-name').value };
+        isExam = mode === 'exam';
+
+        if (isExam) {
+            document.getElementById('exam-warning').classList.remove('hidden');
+            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+        }
+
+        const mcqs = shuffle([...KX_BANK.filter(q => q.type === 'mcq')]).slice(0, 12);
+        const tfs = shuffle([...KX_BANK.filter(q => q.type === 'truefalse')]).slice(0, 4);
+        const shorts = shuffle([...KX_BANK.filter(q => q.type === 'short')]).slice(0, 4);
+        currentQuestions = [...mcqs, ...tfs, ...shorts];
+
+        document.getElementById('welcome-screen').classList.add('hidden');
+        document.getElementById('quiz-header').classList.remove('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        document.getElementById('quiz-nav').classList.remove('hidden');
+        document.getElementById('header-user').innerText = `${name} - SBD: ${sbd}`;
+        
+        renderQuestion();
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        const q = currentQuestions[currentIndex];
+        timeLeft = q.type === 'mcq' ? 90 : 120;
+        updateTimerUI();
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTimerUI();
+            if (timeLeft <= 0) changeQuestion(1);
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const m = Math.floor(timeLeft/60); const s = timeLeft%60;
+        document.getElementById('timer-display').innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    function renderQuestion() {
+        const q = currentQuestions[currentIndex];
+        const container = document.getElementById('question-container');
+        let html = `<span class="q-number">Câu ${currentIndex + 1}.</span>`;
+
+        if (q.type === 'mcq') {
+            html += `<div class="q-text">${q.question}</div><ul class="options-list">`;
+            q.options.forEach((opt, i) => {
+                html += `<li class="option-item ${userAnswers[currentIndex] === i ? 'selected' : ''}" onclick="selectMCQ(${i})">
+                    <strong>${String.fromCharCode(65+i)}.</strong> &nbsp; ${opt}</li>`;
+            });
+            html += `</ul>`;
+        } else if (q.type === 'truefalse') {
+            html += `<div class="q-text">${q.context}</div><table class="tf-container">`;
+            q.statements.forEach((s, i) => {
+                const ans = userAnswers[currentIndex]?.[i];
+                html += `<tr class="tf-row"><td class="tf-statement">${s}</td><td class="tf-actions">
+                    <button class="btn-tf ${ans===true?'active-true':''}" onclick="selectTF(${i},true)">Đúng</button>
+                    <button class="btn-tf ${ans===false?'active-false':''}" onclick="selectTF(${i},false)">Sai</button>
+                </td></tr>`;
+            });
+            html += `</table>`;
+        } else {
+            html += `<div class="q-text">${q.question}</div>
+                <input type="text" class="short-answer-input" oninput="saveShort(this.value)" value="${userAnswers[currentIndex]||''}" placeholder="Nhập đáp án...">`;
+        }
+
+        container.innerHTML = html;
+        
+        // Gọi MathJax vẽ lại công thức
+        if (window.MathJax && MathJax.typesetPromise) {
+            MathJax.typesetPromise([container]).catch((err) => console.log(err.message));
+        }
+
+        document.getElementById('prev-btn').disabled = currentIndex === 0;
+        document.getElementById('next-btn').classList.toggle('hidden', currentIndex === currentQuestions.length - 1);
+        document.getElementById('submit-btn').classList.toggle('hidden', currentIndex !== currentQuestions.length - 1);
+    }
+
+    function selectMCQ(i) { userAnswers[currentIndex] = i; renderQuestion(); }
+    function selectTF(i, v) { if(!userAnswers[currentIndex]) userAnswers[currentIndex] = {}; userAnswers[currentIndex][i] = v; renderQuestion(); }
+    function saveShort(v) { userAnswers[currentIndex] = v; }
+
+    function changeQuestion(dir) {
+        currentIndex += dir;
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex >= currentQuestions.length) { currentIndex = currentQuestions.length - 1; }
+        renderQuestion(); startTimer();
+    }
+
+    function confirmSubmit() { if(confirm('Bạn có chắc chắn muốn nộp bài?')) finishQuiz(); }
+
+    function finishQuiz() {
+        if(isFinished) return; isFinished = true;
+        clearInterval(timerInterval);
+        let totalScore = 0;
+        currentQuestions.forEach((q, idx) => {
+            const ua = userAnswers[idx];
+            if (q.type === 'mcq' && ua === q.answer) totalScore += 0.25;
+            else if (q.type === 'truefalse') {
+                let count = 0; q.correctPattern.forEach((v, i) => { if(ua && ua[i] === v) count++; });
+                if(count === 1) totalScore += 0.0625; else if(count === 2) totalScore += 0.125; else if(count === 3) totalScore += 0.25; else if(count === 4) totalScore += 0.5;
+            } else if (q.type === 'short' && ua?.trim().replace(',','.') === q.answer) totalScore += 0.5;
+        });
+
+        showResults(Math.min(7, Math.round(totalScore * 10) / 10));
+    }
+
+    function showResults(score) {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('quiz-nav').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('result-greeting').innerText = `Chúc mừng ${currentUser.name}!`;
+        document.getElementById('result-score').innerText = `${score.toFixed(1)} / 7.0`;
+        
+        const badge = document.getElementById('result-rank');
+        if (score >= 6) { badge.innerText = 'XUẤT SẮC'; badge.style.backgroundColor = '#38a169'; }
+        else if (score >= 5) { badge.innerText = 'GIỎI'; badge.style.backgroundColor = '#2b6cb0'; }
+        else if (score >= 4) { badge.innerText = 'KHÁ'; badge.style.backgroundColor = '#d69e2e'; }
+        else if (score >= 3) { badge.innerText = 'ĐẠT'; badge.style.backgroundColor = '#718096'; }
+        else { badge.innerText = 'CHƯA ĐẠT'; badge.style.backgroundColor = '#e53e3e'; }
+
+        const list = document.getElementById('review-list');
+        list.innerHTML = '<h3>Giải thích:</h3>';
+        currentQuestions.forEach((q, i) => {
+            const div = document.createElement('div');
+            div.className = 'review-item';
+            div.innerHTML = `<strong>Câu ${i+1}:</strong> ${q.question || q.context}<div class="explanation">${q.explanation}</div>`;
+            list.appendChild(div);
+        });
+        if (window.MathJax) MathJax.typesetPromise([list]);
+    }
+
+    document.addEventListener("visibilitychange", () => {
+        if (isExam && !isFinished && document.visibilityState === 'hidden') {
+            alert("Rời trang - Bài làm đã được nộp!"); finishQuiz();
+        }
+    });
+</script>
+</body>
+</html>
